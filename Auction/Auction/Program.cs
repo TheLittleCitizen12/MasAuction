@@ -7,7 +7,10 @@ namespace Auction
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Office office = new Office(true, true, false, true, 50, 7, "Rotchild 6, Tel-Aviv");
+            Console.WriteLine(office.Address);
+            Console.ReadLine();
+            
         }
     }
 }
