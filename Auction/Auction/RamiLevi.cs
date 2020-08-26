@@ -4,32 +4,30 @@ using System.Text;
 
 namespace Auction
 {
-    class GoogleCompany : Agent
+    class RamiLevi : Agent
     {
-        public GoogleCompany(string name)
+        public RamiLevi(string name)
         {
             _name = name;
         }
-
         public override bool IsPartOfTheSale()
         {
-            return true;
+            throw new NotImplementedException();
         }
 
         public override int MakeANewOffer()
         {
-            return 4;
+            throw new NotImplementedException();
         }
 
         public override int MakeANewOfferWhenSaleEnd()
         {
-            return 4;
+            throw new NotImplementedException();
         }
 
-        
         public override int SetStrartPrice()
         {
-            return 4;
+            throw new NotImplementedException();
         }
     }
 }
