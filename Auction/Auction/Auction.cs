@@ -8,12 +8,12 @@ namespace Auction
 {
     abstract class Auction
     {
-        string proudoctName;
+        //string proudoctName;
         protected int _startPrice;
         protected int _jumpSize;
         protected string _id { get; set; }
-        DateTime timer;
-        DateTime strartTime;
+        //DateTime timer;
+        //DateTime strartTime;
         //public delegate void StartingAuctionEventHandler(object source, EventArgs args);
         //public event StartingAuctionEventHandler StartingAuction;
         List<Agent> AgentsList = new List<Agent>();
@@ -50,11 +50,10 @@ namespace Auction
         {
             for (int i = 0; i < AgentsList.Count; i++)
             {
-                int num = i;
-                Task.Factory.StartNew(() =>
+                var goThrowTheList = Task.Factory.StartNew(() =>
                 {
-                    
-                    Console.WriteLine("Auction id: {0} is starting,{1} Do you want to participate?", this.id,AgentsList[num].name);
+                    int num = i;
+                    Console.WriteLine("Auction id: {0} is starting,{1} Do you want to participate?", this.id, AgentsList[num].name);
                     if (!AgentsList[num].IsPartOfTheAcution())
                     {
                         AgentsList.RemoveAt(num);
@@ -62,15 +61,17 @@ namespace Auction
                     }
                     else
                     {
-                        Console.WriteLine("{0}: YES",AgentsList[num].name);
+                        Console.WriteLine("{0}: YES", AgentsList[num].name);
                     }
+                    
                 });
-
-                if (AgentsList != null)
-                    this.ShowInformation(property);
-                
+                goThrowTheList.Wait();
 
             }
+            
+            if (AgentsList != null)
+                this.ShowInformation(property);
+
 
         }
         
