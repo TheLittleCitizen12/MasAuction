@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace Auction
+
+namespace Client
 {
   
-    abstract class Agent
+    public abstract class Agent
     {
         protected string _name { set; get; }
         public int count = 0;
+        
 
 
         public string name
@@ -27,17 +29,19 @@ namespace Auction
             return isPartOfTheSale;
         }
         
-        public int SetStrartPrice(Property property, int startPrice, int jumpSize, string currenWinner)
+        public int SetStrartPrice( int startPrice, int jumpSize, string currenWinner)
         {
             if (currenWinner != this.name)
             {
-                return this.agentDemend(startPrice,jumpSize,property);
+                return this.agentDemend(startPrice,jumpSize);
             }
             return 0;
 
         }
 
-        public abstract int agentDemend(int startPrice, int jumpSize, Property property);
+        public abstract int agentDemend(int startPrice, int jumpSize);
+
+        
 
 
 

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Client;
+
 
 namespace Auction
 {
     class Mas
     {
-        List<Agent> AgentsList = new List<Agent>();
+        
         List<Auction> auctionsList = new List<Auction>();
         List<Property> propertyList = new List<Property>();
         public void CreatePropery()
@@ -50,22 +52,7 @@ namespace Auction
             auctionsList.Add(auction);
         }
 
-        public void CreateAgent()
-        {
-            var google = new GoogleCompany("google");
-            AddAgentToList(google);
-            var ramiLevi = new RamiLevi("Rami Levi");
-            AddAgentToList(ramiLevi);
-            var facebook = new Facebook("Facebook");
-            AddAgentToList(facebook);
-        }
-
-        public void AddAgentToList(Agent agent)
-        {
-            AgentsList.Add(agent);
-        }
-
-        public void startAuctions()
+        public void startAuctions(Client.AgentFactory agentFactory.)
         {
             for (int i = 0; i < auctionsList.Count; i++)
             {

@@ -1,8 +1,8 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+using Client;
+
 
 namespace Auction
 {
@@ -18,11 +18,14 @@ namespace Auction
     }
         static void Main(string[] args)
         {
+            AgentFactory agentFactory = new AgentFactory();
+            agentFactory.CreateAgent();
+            List<Agent> agentsList = new List<Agent>();
+            agentsList = agentFactory.SendList();
             Mas mas = new Mas();
             mas.CreatePropery();
             mas.CreateAuction();
-            mas.CreateAgent();
-            mas.startAuctions();
+            mas.startAuctions(agentsList);
             Console.ReadLine();
 
 

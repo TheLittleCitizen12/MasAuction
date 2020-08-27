@@ -2,23 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Auction
+namespace Client
 {
-    class GoogleCompany : Agent
+    class Facebook : Agent
     {
-        public GoogleCompany(string name)
+        public Facebook(string name)
         {
             _name = name;
         }
-
-        public override int agentDemend(int startPrice, int jumpSize, Property property)
+        public override int agentDemend(int startPrice, int jumpSize)
         {
             int raise = 0;
-            if (startPrice < 600)
+            if(startPrice < 600)
                 raise = startPrice + jumpSize + 40;
             return raise;
         }
-
-       
     }
 }

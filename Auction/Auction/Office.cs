@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Client;
+using Client2;
 
 namespace Auction
 {
@@ -16,6 +18,7 @@ namespace Auction
             _NumOfToiletCubicles = NumOfToiletCubicles;
             _NumOfDiningAreas = NumOfDiningAreas;
             _Address = Address;
+             
 
         }
     }
