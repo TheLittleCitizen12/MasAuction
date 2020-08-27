@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Auction
 {
+  
     abstract class Agent
     {
         protected string _name { set; get; }
+        public int count = 0;
 
 
         public string name
@@ -21,6 +24,7 @@ namespace Auction
         {
             Random rng = new Random();
             bool isPartOfTheSale = rng.Next(0, 3) > 0;
+            isPartOfTheSale = true;
             return isPartOfTheSale;
         }
         
