@@ -16,9 +16,11 @@ namespace Auction
         public bool isActive = true;
         public string winnerName = "no one";
         protected string _id { get; set; }
-        List<Agent> AgentsList = new List<Agent>();
+        
         List<string> currentWiner = new List<string>();
+        List<Agent> AgentInTheAuction = new List<Agent>();
         protected static Random _random = new Random();
+
         protected static ConsoleColor GetRandomConsoleColor()
         {
             var consoleColors = Enum.GetValues(typeof(ConsoleColor));
@@ -54,11 +56,8 @@ namespace Auction
                 return _jumpSize;
             }
         }
-        public void AddAgentToList(Agent agent)
-        {
-            AgentsList.Add(agent);
-        }
-        public void StartAuction(Property property)
+        
+        public void StartAuction(Property property,List<Agent> AgentsList)
         {
             List<Task> taskList = new List<Task>();
             System.Timers.Timer timer1 = new System.Timers.Timer();
@@ -75,17 +74,15 @@ namespace Auction
                     var task = Task.Factory.StartNew(() =>
                     {
                         Console.WriteLine("Auction id: {0} is starting,{1} Do you want to participate?", this.id, AgentsList[num].name);
-                        if (!AgentsList[num].IsPartOfTheAcution())
+                        if (AgentsList[num].IsPartOfTheAcution())
                         {
-                            Console.WriteLine("{0}: NO\n", AgentsList[num].name);
-                            AgentsList.RemoveAt(num);
-                            j--;
-
+                            timer1.Stop();
+                            AgentInTheAuction.Add(AgentsList[num]);
+                            Console.WriteLine("{0}: YES\n", AgentsList[num].name);
                         }
                         else
                         {
-                            timer1.Stop();
-                            Console.WriteLine("{0}: YES\n", AgentsList[num].name);
+                            Console.WriteLine("{0}: NO\n", AgentsList[num].name);
                         }
                     });
                     taskList.Add(task);
@@ -94,8 +91,8 @@ namespace Auction
                 timer1.Stop();
             }
             Task.WaitAll(taskList.ToArray());
-            if (AgentsList.Count != 0 && this.isActive == false)
-                this.ShowInformation(property);
+            if (AgentInTheAuction.Count != 0 && this.isActive == false)
+                this.ShowInformation(property, AgentInTheAuction);
             else
             {
                 Console.WriteLine("The auction: {0} is canceled because there are no participants\n", this.id);
@@ -107,8 +104,10 @@ namespace Auction
 
 
 
-        public void ShowInformation(Property property)
+        public void ShowInformation(Property property, List<Agent> AgentInTheAuction)
         {
+            List<Task> taskList1 = new List<Task>();
+            List<Task> taskList2 = new List<Task>();
             currentWiner.Add("no one");
             System.Timers.Timer timer1 = new System.Timers.Timer();
             timer1.Elapsed += new ElapsedEventHandler(OnTimeEvent);
@@ -120,7 +119,7 @@ namespace Auction
             while (this.isActive)
             {
                 timer1.Start();
-                for (int j = 0; j < AgentsList.Count; j++)
+                for (int j = 0; j < AgentInTheAuction.Count; j++)
                 {
                     int num = j;
                     var goThrowTheList = Task.Factory.StartNew(() =>
@@ -130,26 +129,28 @@ namespace Auction
                         {
 
                             this.winnerName = currentWiner[currentWiner.Count - 1];
-                            if (AgentsList[num].SetStrartPrice(property, this.startPrice, this.jumpSize, winnerName) >= this.startPrice + this.jumpSize && isActive == true)
+                            if (AgentInTheAuction[num].SetStrartPrice(property, this.startPrice, this.jumpSize, winnerName) >= this.startPrice + this.jumpSize && isActive == true)
                             {
                                 timer1.Stop();
-                                currentWiner.Add(AgentsList[num].name);
-                                int currentRaise = AgentsList[num].SetStrartPrice(property, this.startPrice, this.jumpSize, winnerName);
+                                currentWiner.Add(AgentInTheAuction[num].name);
+                                int currentRaise = AgentInTheAuction[num].SetStrartPrice(property, this.startPrice, this.jumpSize, winnerName);
                                 this.startPrice = currentRaise;
-                                Console.WriteLine("{0}: {1}\n", AgentsList[num].name, this.startPrice);
+                                Console.WriteLine("{0}: {1}\n", AgentInTheAuction[num].name, this.startPrice);
                             }
                         }
 
                     });
+                    taskList1.Add(goThrowTheList);
                 }
             }
+            Task.WaitAll(taskList1.ToArray());
             timer1.Stop();
             Console.WriteLine("Last time 1..2..\n");
             this.isActive = true;
             while (this.isActive)
             {
                 timer1.Start();
-                for (int j = 0; j < AgentsList.Count; j++)
+                for (int j = 0; j < AgentInTheAuction.Count; j++)
                 {
                     int num = j;
                     var goThrowTheList = Task.Factory.StartNew(() =>
@@ -158,21 +159,22 @@ namespace Auction
                         lock (_locker)
                         {
                             this.winnerName = currentWiner[currentWiner.Count - 1];
-                            if (AgentsList[num].SetStrartPrice(property, this.startPrice, this.jumpSize, this.winnerName) >= this.startPrice + this.jumpSize && this.isActive)
+                            if (AgentInTheAuction[num].SetStrartPrice(property, this.startPrice, this.jumpSize, this.winnerName) >= this.startPrice + this.jumpSize && this.isActive)
                             {
                                 timer1.Stop();
-                                currentWiner.Add(AgentsList[num].name);
-                                int currentRaise = AgentsList[num].SetStrartPrice(property, this.startPrice, this.jumpSize, winnerName);
+                                currentWiner.Add(AgentInTheAuction[num].name);
+                                int currentRaise = AgentInTheAuction[num].SetStrartPrice(property, this.startPrice, this.jumpSize, winnerName);
                                 this.startPrice = currentRaise;
                                  
-                                Console.WriteLine("{0}: {1}\n", AgentsList[num].name, this.startPrice);
+                                Console.WriteLine("{0}: {1}\n", AgentInTheAuction[num].name, this.startPrice);
                             }
                         }
 
                     });
-
+                    taskList2.Add(goThrowTheList);
                 }
             }
+            Task.WaitAll(taskList2.ToArray());
             timer1.Stop();
             DeclareOnWinner();
 

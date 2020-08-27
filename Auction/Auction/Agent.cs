@@ -24,15 +24,22 @@ namespace Auction
         {
             Random rng = new Random();
             bool isPartOfTheSale = rng.Next(0, 3) > 0;
-            isPartOfTheSale = true;
             return isPartOfTheSale;
         }
         
-        public abstract int SetStrartPrice(Property property, int startPrice, int jumpSize, string currenWinner);
+        public int SetStrartPrice(Property property, int startPrice, int jumpSize, string currenWinner)
+        {
+            if (currenWinner != this.name)
+            {
+                return this.agentDemend(startPrice,jumpSize,property);
+            }
+            return 0;
 
-        public abstract int MakeANewOffer();
+        }
 
-        public abstract int MakeANewOfferWhenSaleEnd();
+        public abstract int agentDemend(int startPrice, int jumpSize, Property property);
+
+
 
 
 

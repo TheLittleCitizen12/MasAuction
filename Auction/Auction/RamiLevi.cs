@@ -12,26 +12,12 @@ namespace Auction
             _name = name;
         }
 
-
-        public override int MakeANewOffer()
+        public override int agentDemend(int startPrice, int jumpSize, Property property)
         {
-            throw new NotImplementedException();
-        }
-
-        public override int MakeANewOfferWhenSaleEnd()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override int SetStrartPrice(Property property, int startPrice, int jumpSize, string currenWinner)
-        {
-            if (startPrice < 100 && currenWinner != this.name)
-            {
-                int raisePrice = startPrice + jumpSize;
-                return raisePrice;
-            }
-            return 0;
-
+            int raise = 0;
+            if (startPrice < 600)
+                raise = startPrice + jumpSize + 30;
+            return raise;
         }
     }
 }
