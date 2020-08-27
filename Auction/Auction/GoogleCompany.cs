@@ -23,9 +23,9 @@ namespace Auction
         }
 
         
-        public override int SetStrartPrice(Property property, int startPrice, int jumpSize)
+        public override int SetStrartPrice(Property property, int startPrice, int jumpSize, string currenWinner)
         {
-            if(startPrice < 110)
+            if(startPrice < 110 && currenWinner != this.name)
             {
                 int raisePrice = startPrice + jumpSize;
                 return raisePrice;

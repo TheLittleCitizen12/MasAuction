@@ -20,12 +20,11 @@ namespace Auction
         public bool IsPartOfTheAcution()
         {
             Random rng = new Random();
-            bool isPartOfTheSale = rng.Next(0, 2) > 0;
-            isPartOfTheSale = true;
+            bool isPartOfTheSale = rng.Next(0, 3) > 0;
             return isPartOfTheSale;
         }
         
-        public abstract int SetStrartPrice(Property property, int startPrice, int jumpSize);
+        public abstract int SetStrartPrice(Property property, int startPrice, int jumpSize, string currenWinner);
 
         public abstract int MakeANewOffer();
 

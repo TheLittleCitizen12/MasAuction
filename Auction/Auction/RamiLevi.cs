@@ -23,9 +23,9 @@ namespace Auction
             throw new NotImplementedException();
         }
 
-        public override int SetStrartPrice(Property property, int startPrice, int jumpSize)
+        public override int SetStrartPrice(Property property, int startPrice, int jumpSize, string currenWinner)
         {
-            if (startPrice < 100)
+            if (startPrice < 100 && currenWinner != this.name)
             {
                 int raisePrice = startPrice + jumpSize;
                 return raisePrice;
