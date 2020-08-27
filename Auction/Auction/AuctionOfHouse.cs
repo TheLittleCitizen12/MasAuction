@@ -11,6 +11,7 @@ namespace Auction
             _id = id;
             _startPrice = startPrice;
             _jumpSize = JumpSize;
+
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Auction
 {
@@ -10,10 +11,7 @@ namespace Auction
         {
             _name = name;
         }
-        public override bool IsPartOfTheSale()
-        {
-            throw new NotImplementedException();
-        }
+
 
         public override int MakeANewOffer()
         {
@@ -25,9 +23,15 @@ namespace Auction
             throw new NotImplementedException();
         }
 
-        public override int SetStrartPrice()
+        public override int SetStrartPrice(Property property, int startPrice, int jumpSize)
         {
-            throw new NotImplementedException();
+            if (startPrice < 100)
+            {
+                int raisePrice = startPrice + jumpSize;
+                return raisePrice;
+            }
+            return 0;
+
         }
     }
 }

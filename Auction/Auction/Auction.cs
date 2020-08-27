@@ -3,20 +3,20 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Auction
 {
+    
     abstract class Auction
     {
-        //string proudoctName;
+        private static object _locker = new object();
         protected int _startPrice;
         protected int _jumpSize;
+        public bool isActive = true;
         protected string _id { get; set; }
-        //DateTime timer;
-        //DateTime strartTime;
-        //public delegate void StartingAuctionEventHandler(object source, EventArgs args);
-        //public event StartingAuctionEventHandler StartingAuction;
         List<Agent> AgentsList = new List<Agent>();
+        ConcurrentStack<string> currentWiner = new ConcurrentStack<string>();
         
 
         public string id
@@ -30,6 +30,10 @@ namespace Auction
         public int startPrice
 
         {
+            set
+            {
+                _startPrice = value;
+            }
             get
             {
                 return _startPrice;
@@ -50,47 +54,114 @@ namespace Auction
         {
             for (int i = 0; i < AgentsList.Count; i++)
             {
+                
                 var goThrowTheList = Task.Factory.StartNew(() =>
                 {
                     int num = i;
                     Console.WriteLine("Auction id: {0} is starting,{1} Do you want to participate?", this.id, AgentsList[num].name);
                     if (!AgentsList[num].IsPartOfTheAcution())
                     {
+                        Console.WriteLine("{0}: NO\n", AgentsList[num].name);
                         AgentsList.RemoveAt(num);
-                        Console.WriteLine("{0}: NO", AgentsList[num].name);
+                        i--;
+                        
                     }
                     else
                     {
-                        Console.WriteLine("{0}: YES", AgentsList[num].name);
+                        Console.WriteLine("{0}: YES\n", AgentsList[num].name);
                     }
                     
                 });
                 goThrowTheList.Wait();
-
             }
             
-            if (AgentsList != null)
-                this.ShowInformation(property);
 
+            if (AgentsList.Count != 0)
+                this.ShowInformation(property);
+            else
+            {
+                Console.WriteLine("The auction: {0} is canceled because there are no participants\n", this.id);
+            }
+            
 
         }
         
 
-        //protected virtual void OnStartingAuction()
-        //{
-        //    if (StartingAuction != null)
-        //        StartingAuction(this, EventArgs.Empty);
-
-        //}
         public void ShowInformation(Property property)
         {
-            Console.WriteLine("The property we sale is: {0}\n start price of: {1}\n jump price:{2}\n",property.Address, this.startPrice,this.jumpSize);
+            System.Timers.Timer timer1 = new System.Timers.Timer();
+            timer1.Elapsed += new ElapsedEventHandler(OnTimeEvent);
+            timer1.Interval = 2000;
+            
+            Console.WriteLine("The property we sale is: {0}\n start price of: {1}\n jump price:{2}\n", property.Address, this.startPrice, this.jumpSize);
+            while (this.isActive)
+            {
+                timer1.Start();
+                for (int j = 0; j < AgentsList.Count; j++)
+                {
+                    int num = j;
+                    var goThrowTheList = Task.Factory.StartNew(() =>
+                    {
+                        
+                        lock (_locker)
+                        {
+
+                            if (AgentsList[num].SetStrartPrice(property, this.startPrice, this.jumpSize) >= this.startPrice + this.jumpSize && isActive == true)
+                            {
+                                timer1.Start();
+                                currentWiner.Push(AgentsList[num].name);
+                                int currentRaise = AgentsList[num].SetStrartPrice(property, this.startPrice, this.jumpSize);
+                                this.startPrice = currentRaise;
+                                Console.WriteLine("{0}: {1}\n", AgentsList[num].name, this.startPrice);
+                            }
+                        }
+
+                    });
+                    goThrowTheList.Wait();
+                }
+            }
+            Console.WriteLine("Last time 1..2..");
+            this.isActive = true;
+            while (this.isActive)
+            {
+                timer1.Start();
+                for (int j = 0; j < AgentsList.Count; j++)
+                {
+                    int num = j;
+                    var goThrowTheList = Task.Factory.StartNew(() =>
+                    {
+
+                        lock (_locker)
+                        {
+
+                            if (AgentsList[num].SetStrartPrice(property, this.startPrice, this.jumpSize) >= this.startPrice + this.jumpSize)
+                            {
+                                timer1.Start();
+                                currentWiner.Push(AgentsList[num].name);
+                                int currentRaise = AgentsList[num].SetStrartPrice(property, this.startPrice, this.jumpSize);
+                                this.startPrice = currentRaise;
+                                 
+                                Console.WriteLine("{0}: {1}\n", AgentsList[num].name, this.startPrice);
+                            }
+                        }
+
+                    });
+                    goThrowTheList.Wait();
+                }
+            }
+            string winnerName;
+            bool isSuccess = currentWiner.TryPop(out winnerName);
+            Console.WriteLine("The Winner is:{0}", winnerName);
+
+
         }
 
-        public void SendUpdatePrice()
+        private void OnTimeEvent(object sender, ElapsedEventArgs e)
         {
-
+            this.isActive = false;
         }
+
+
 
         public void DeclreEndOfSale()
         {

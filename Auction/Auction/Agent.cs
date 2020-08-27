@@ -7,7 +7,8 @@ namespace Auction
     abstract class Agent
     {
         protected string _name { set; get; }
-        
+
+
         public string name
         {
             get
@@ -20,15 +21,11 @@ namespace Auction
         {
             Random rng = new Random();
             bool isPartOfTheSale = rng.Next(0, 2) > 0;
+            isPartOfTheSale = true;
             return isPartOfTheSale;
         }
         
-        public abstract bool IsPartOfTheSale();
-        public void GetInfomaitonOnSale(string proudoctnme, int startPrice, int jumpSize, List<Agent> participateList)
-        {
-
-        }
-        public abstract int SetStrartPrice();
+        public abstract int SetStrartPrice(Property property, int startPrice, int jumpSize);
 
         public abstract int MakeANewOffer();
 

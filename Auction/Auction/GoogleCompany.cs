@@ -11,10 +11,6 @@ namespace Auction
             _name = name;
         }
 
-        public override bool IsPartOfTheSale()
-        {
-            return true;
-        }
 
         public override int MakeANewOffer()
         {
@@ -27,9 +23,15 @@ namespace Auction
         }
 
         
-        public override int SetStrartPrice()
+        public override int SetStrartPrice(Property property, int startPrice, int jumpSize)
         {
-            return 4;
+            if(startPrice < 110)
+            {
+                int raisePrice = startPrice + jumpSize;
+                return raisePrice;
+            }
+            return 0;
+            
         }
     }
 }
