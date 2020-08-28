@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Timers;
@@ -128,11 +129,11 @@ namespace Auction
                         {
 
                             this.winnerName = currentWiner[currentWiner.Count - 1];
-                            if (AgentInTheAuction[num].SetStrartPrice(property, this.startPrice, this.jumpSize, winnerName) >= this.startPrice + this.jumpSize && isActive == true)
+                            if (AgentInTheAuction[num].SetStrartPrice( this.startPrice, this.jumpSize, winnerName) >= this.startPrice + this.jumpSize && isActive == true)
                             {
                                 timer1.Stop();
                                 currentWiner.Add(AgentInTheAuction[num].name);
-                                int currentRaise = AgentInTheAuction[num].SetStrartPrice(property, this.startPrice, this.jumpSize, winnerName);
+                                int currentRaise = AgentInTheAuction[num].SetStrartPrice(this.startPrice, this.jumpSize, winnerName);
                                 this.startPrice = currentRaise;
                                 Console.WriteLine("{0}: {1}\n", AgentInTheAuction[num].name, this.startPrice);
                             }
@@ -158,11 +159,11 @@ namespace Auction
                         lock (_locker)
                         {
                             this.winnerName = currentWiner[currentWiner.Count - 1];
-                            if (AgentInTheAuction[num].SetStrartPrice(property, this.startPrice, this.jumpSize, this.winnerName) >= this.startPrice + this.jumpSize && this.isActive)
+                            if (AgentInTheAuction[num].SetStrartPrice( this.startPrice, this.jumpSize, this.winnerName) >= this.startPrice + this.jumpSize && this.isActive)
                             {
                                 timer1.Stop();
                                 currentWiner.Add(AgentInTheAuction[num].name);
-                                int currentRaise = AgentInTheAuction[num].SetStrartPrice(property, this.startPrice, this.jumpSize, winnerName);
+                                int currentRaise = AgentInTheAuction[num].SetStrartPrice( this.startPrice, this.jumpSize, winnerName);
                                 this.startPrice = currentRaise;
                                  
                                 Console.WriteLine("{0}: {1}\n", AgentInTheAuction[num].name, this.startPrice);

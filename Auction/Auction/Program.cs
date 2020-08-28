@@ -18,14 +18,13 @@ namespace Auction
     }
         static void Main(string[] args)
         {
-            AgentFactory agentFactory = new AgentFactory();
-            agentFactory.CreateAgent();
-            List<Agent> agentsList = new List<Agent>();
-            agentsList = agentFactory.SendList();
+            
+            
             Mas mas = new Mas();
             mas.CreatePropery();
             mas.CreateAuction();
-            mas.startAuctions(agentsList);
+            mas.CreateAgent();
+            mas.startAuctions();
             Console.ReadLine();
 
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Client;
-using Client2;
+
 
 namespace Auction
 {

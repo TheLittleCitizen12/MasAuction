@@ -12,6 +12,7 @@ namespace Auction
         
         List<Auction> auctionsList = new List<Auction>();
         List<Property> propertyList = new List<Property>();
+        List<Agent> agentsList = new List<Agent>();
         public void CreatePropery()
         {
             for (int i = 0; i < 5; i++)
@@ -51,15 +52,30 @@ namespace Auction
         {
             auctionsList.Add(auction);
         }
+        public void CreateAgent()
+        {
+            var google = new GoogleCompany("google");
+            AddAgentToList(google);
+            var ramiLevi = new RamiLevi("Rami Levi");
+            AddAgentToList(ramiLevi);
+            var facebook = new Facebook("Facebook");
+            AddAgentToList(facebook);
+        }
 
-        public void startAuctions(Client.AgentFactory agentFactory.)
+
+        public void AddAgentToList(Agent agent)
+        {
+            agentsList.Add(agent);
+        }
+
+        public void startAuctions()
         {
             for (int i = 0; i < auctionsList.Count; i++)
             {
                 int num = i;
                 var task = Task.Factory.StartNew(() =>
                 {
-                    auctionsList[num].StartAuction(propertyList[num], AgentsList);
+                    auctionsList[num].StartAuction(propertyList[num], agentsList);
                 });
                 
             }
